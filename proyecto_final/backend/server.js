@@ -19,6 +19,8 @@ app.use('/api/cuentas',     cuentasRoutes)
 app.use('/api/creditos',    creditosRoutes)
 app.use('/api/operaciones', operacionesRoutes)
 
+app.get('/', (_req, res) => res.json({ message: 'CMAC Paita API funcionando correctamente' }))
+
 app.get('/api/health', (_req, res) =>
   res.json({ estado: 'OK', servicio: 'CMAC Paita API', version: '1.0.0' })
 )
