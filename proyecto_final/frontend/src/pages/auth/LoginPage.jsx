@@ -1,11 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { CreditCard, Lock, LogIn, Eye, EyeOff } from 'lucide-react'
+import { CreditCard, Lock, LogIn, Eye, EyeOff, RefreshCw, ShieldCheck } from 'lucide-react'
 import { useHBAuth } from '../../hooks/useHBAuth.js'
 import { extractError } from '../../utils/format.js'
 import Alert from '../../components/ui/Alert.jsx'
 
 const ROLES = ['Cliente', 'Asesor', 'Admin', 'Riesgos']
+
+function generarCodigo() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  let code = ''
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)]
+  return code
+}
 
 export default function LoginPage() {
   const { login, isAuthenticated } = useHBAuth()
@@ -17,13 +24,25 @@ export default function LoginPage() {
   const [showPass, setShowPass] = useState(false)
   const [error,    setError]    = useState(null)
   const [loading,  setLoading]  = useState(false)
+  const [captcha,  setCaptcha]  = useState(() => generarCodigo())
+  const [inputCaptcha, setInputCaptcha] = useState('')
 
   useEffect(() => { if (isAuthenticated) navigate('/inicio', { replace: true }) }, [isAuthenticated])
+
+  const refrescarCaptcha = () => {
+    setCaptcha(generarCodigo())
+    setInputCaptcha('')
+  }
 
   const onSubmit = async (e) => {
     e.preventDefault()
     setError(null)
     if (!username.trim()) { setError('Ingresa tu usuario'); return }
+    if (inputCaptcha.toUpperCase() !== captcha) {
+      setError('Codigo de seguridad incorrecto')
+      refrescarCaptcha()
+      return
+    }
     setLoading(true)
     try {
       const u = await login(username.trim(), password)
@@ -31,6 +50,7 @@ export default function LoginPage() {
       navigate(rutas[u.rol] || '/inicio', { replace: true })
     } catch (err) {
       setError(extractError(err, 'No se pudo iniciar sesion.'))
+      refrescarCaptcha()
     } finally {
       setLoading(false)
     }
@@ -106,6 +126,44 @@ export default function LoginPage() {
                 <button type="button" className="hb-input-icon-r" onClick={() => setShowPass(p => !p)}>
                   {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
+              </div>
+            </div>
+
+            {/* CAPTCHA */}
+            <div className="hb-field">
+              <label><ShieldCheck size={14} style={{marginRight:4}}/> Codigo de seguridad</label>
+              <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:8 }}>
+                <div style={{
+                  background:'#1a2b3c',
+                  color:'#fff',
+                  padding:'10px 18px',
+                  borderRadius:8,
+                  fontFamily:'monospace',
+                  fontSize:22,
+                  fontWeight:800,
+                  letterSpacing:6,
+                  userSelect:'none',
+                  textDecoration:'line-through wavy rgba(255,255,255,0.15)',
+                  position:'relative',
+                  minWidth:130,
+                  textAlign:'center',
+                  background: 'linear-gradient(135deg, #1a2b3c 0%, #005A9C 100%)',
+                  textShadow:'1px 1px 2px rgba(0,0,0,0.5)',
+                  border:'2px solid var(--cp-border)'
+                }}>
+                  {captcha}
+                </div>
+                <button type="button" onClick={refrescarCaptcha}
+                  style={{ background:'none', border:'1.5px solid var(--cp-border)', borderRadius:8, padding:'8px 12px', cursor:'pointer', color:'var(--cp-azul)', display:'flex', alignItems:'center', gap:6, fontSize:13, fontWeight:600 }}>
+                  <RefreshCw size={16}/> Nuevo
+                </button>
+              </div>
+              <div className="hb-input-wrap">
+                <ShieldCheck size={18} className="hb-input-icon" />
+                <input className="hb-input" placeholder="Escribe el codigo"
+                  value={inputCaptcha}
+                  onChange={e => { setInputCaptcha(e.target.value.toUpperCase()); setError(null) }}
+                  maxLength={6} required />
               </div>
             </div>
 
