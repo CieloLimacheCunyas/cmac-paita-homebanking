@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useLocation, Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { CreditCard, Lock, LogIn, Eye, EyeOff } from 'lucide-react'
 import { useHBAuth } from '../../hooks/useHBAuth.js'
 import { extractError } from '../../utils/format.js'
 import Alert from '../../components/ui/Alert.jsx'
 
+const ROLES = ['Cliente', 'Asesor', 'Admin', 'Riesgos']
+
 export default function LoginPage() {
   const { login, isAuthenticated } = useHBAuth()
-  const navigate  = useNavigate()
-  const location  = useLocation()
+  const navigate = useNavigate()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [rolSel,   setRolSel]   = useState(null)
   const [showPass, setShowPass] = useState(false)
   const [error,    setError]    = useState(null)
   const [loading,  setLoading]  = useState(false)
@@ -61,6 +63,23 @@ export default function LoginPage() {
             <p style={{ margin:'4px 0 0', color:'var(--cp-muted)', fontSize:13 }}>Ingresa con tu usuario y clave</p>
           </div>
 
+          <div className="demo-box" style={{ marginBottom:16 }}>
+            <div className="demo-label">¿Quién ingresa?</div>
+            <div className="demo-grid">
+              {ROLES.map(rol => (
+                <button key={rol} type="button" className="demo-btn"
+                  style={{
+                    borderColor: rolSel===rol ? 'var(--cp-azul)' : '',
+                    background:  rolSel===rol ? 'var(--cp-azul-light)' : '',
+                    fontWeight:  rolSel===rol ? 800 : 600
+                  }}
+                  onClick={() => setRolSel(rol)}>
+                  {rol}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <Alert tipo="error">{error}</Alert>
 
           <form onSubmit={onSubmit}>
@@ -68,9 +87,9 @@ export default function LoginPage() {
               <label>Usuario de banca</label>
               <div className="hb-input-wrap">
                 <CreditCard size={18} className="hb-input-icon" />
-                <input className="hb-input" placeholder="Ej. cli000001"
+                <input className="hb-input" placeholder="Escribe tu usuario"
                   autoComplete="username" value={username}
-                  onChange={e => setUsername(e.target.value)} autoFocus required />
+                  onChange={e => { setUsername(e.target.value); setError(null) }} required />
               </div>
             </div>
 
