@@ -5,9 +5,37 @@ import { useHBAuth } from '../../hooks/useHBAuth.js'
 import { extractError } from '../../utils/format.js'
 import Alert from '../../components/ui/Alert.jsx'
 
-    return (
+export default function LoginPage() {
+  const { login, isAuthenticated } = useHBAuth()
+  const navigate  = useNavigate()
+  const location  = useLocation()
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPass, setShowPass] = useState(false)
+  const [error,    setError]    = useState(null)
+  const [loading,  setLoading]  = useState(false)
+
+  useEffect(() => { if (isAuthenticated) navigate('/inicio', { replace: true }) }, [isAuthenticated])
+
+  const onSubmit = async (e) => {
+    e.preventDefault()
+    setError(null)
+    if (!username.trim()) { setError('Ingresa tu usuario'); return }
+    setLoading(true)
+    try {
+      const u = await login(username.trim(), password)
+      const rutas = { cliente:'/inicio', asesor:'/inicio', admin:'/inicio', riesgos:'/inicio', comite:'/inicio', gerencia:'/inicio' }
+      navigate(rutas[u.rol] || '/inicio', { replace: true })
+    } catch (err) {
+      setError(extractError(err, 'No se pudo iniciar sesion.'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
     <div className="hb-login-bg">
-      {/* Panel izquierdo — Branding */}
       <div className="hb-login-brand">
         <div className="brand-content">
           <img src="/logo.png" alt="CMAC Paita" style={{ height:64, objectFit:"contain", marginBottom:"1.5rem", filter:"brightness(0) invert(1)" }} />
@@ -24,11 +52,9 @@ import Alert from '../../components/ui/Alert.jsx'
         <div className="brand-footer">© 2024 CMAC Paita · Supervisada por la SBS</div>
       </div>
 
-      {/* Panel derecho — Formulario */}
       <div className="hb-login-form-panel">
         <div className="hb-login-card">
           <div className="hb-login-franja" />
-
           <div style={{ textAlign:'center', marginBottom:22 }}>
             <img src="/logo.png" alt="CMAC Paita" style={{ height:60, objectFit:"contain", margin:"0 auto 12px", display:"block" }} />
             <h2 style={{ margin:0, fontSize:'1.5rem', fontWeight:700 }}>Bienvenido</h2>
@@ -73,17 +99,6 @@ import Alert from '../../components/ui/Alert.jsx'
           <p className="hb-login-hint">
             ¿No tienes cuenta? <Link to="/registro">Registrate aqui</Link>
           </p>
-
-          <div className="demo-box">
-            <div className="demo-label">Accesos de demostración · clave: Paita2024!</div>
-            <div className="demo-grid">
-              {DEMOS.map(d => (
-                <button key={d.rol} className="demo-btn" onClick={() => usarDemo(d.username)}>
-                  {d.rol}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>
