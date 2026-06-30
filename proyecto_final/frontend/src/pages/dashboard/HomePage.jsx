@@ -7,7 +7,7 @@ import { formatMoney } from '../../utils/format.js'
 export default function HomePage() {
   const { user }   = useHBAuth()
   const navigate   = useNavigate()
-  const { cuentas, loading } = useCuentas()
+  const { cuentas, loading } = useCuentas(true)
 
   const primerNombre = (n) => n ? n.split(' ')[0] : 'Cliente'
   const totalSaldo   = cuentas.reduce((s, c) => s + parseFloat(c.saldo), 0)

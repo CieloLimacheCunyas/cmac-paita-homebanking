@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react'
 import { getCuentas } from '../services/cuentasService.js'
 
-export function useCuentas() {
+export function useCuentas(autoRefresh = false) {
   const [cuentas,  setCuentas]  = useState([])
   const [loading,  setLoading]  = useState(true)
   const [error,    setError]    = useState(null)
 
   const cargar = async () => {
-    setLoading(true)
     try {
       const data = await getCuentas()
       setCuentas(data)
@@ -18,7 +17,13 @@ export function useCuentas() {
     }
   }
 
-  useEffect(() => { cargar() }, [])
+  useEffect(() => {
+    cargar()
+    if (autoRefresh) {
+      const interval = setInterval(cargar, 30000)
+      return () => clearInterval(interval)
+    }
+  }, [autoRefresh])
 
   return { cuentas, loading, error, recargar: cargar }
 }
