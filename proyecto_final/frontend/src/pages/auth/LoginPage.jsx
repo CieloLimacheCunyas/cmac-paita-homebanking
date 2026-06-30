@@ -5,45 +5,7 @@ import { useHBAuth } from '../../hooks/useHBAuth.js'
 import { extractError } from '../../utils/format.js'
 import Alert from '../../components/ui/Alert.jsx'
 
-const DEMOS = [
-  { rol: 'Cliente',  username: 'cli000001' },
-  { rol: 'Asesor',   username: 'asesor01'  },
-  { rol: 'Admin',    username: 'admin01'   },
-  { rol: 'Riesgos',  username: 'riesgos01' },
-]
-
-export default function LoginPage() {
-  const { login, isAuthenticated } = useHBAuth()
-  const navigate  = useNavigate()
-  const location  = useLocation()
-
-  const [username, setUsername] = useState(location.state?.username || '')
-  const [password, setPassword] = useState('')
-  const [showPass, setShowPass] = useState(false)
-  const [error,    setError]    = useState(null)
-  const [loading,  setLoading]  = useState(false)
-
-  useEffect(() => { if (isAuthenticated) navigate('/inicio', { replace: true }) }, [isAuthenticated])
-
-  const onSubmit = async (e) => {
-    e.preventDefault()
-    setError(null)
-    if (!username.trim()) { setError('Ingresa tu usuario'); return }
-    setLoading(true)
-    try {
-      const u = await login(username.trim(), password)
-      const rutas = { cliente:'/inicio', asesor:'/inicio', admin:'/inicio', riesgos:'/inicio', comite:'/inicio', gerencia:'/inicio' }
-      navigate(rutas[u.rol] || '/inicio', { replace: true })
-    } catch (err) {
-      setError(extractError(err, 'No se pudo iniciar sesion.'))
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const usarDemo = (u) => { setUsername(u); setPassword('Paita2024!'); setError(null) }
-
-  return (
+    return (
     <div className="hb-login-bg">
       {/* Panel izquierdo — Branding */}
       <div className="hb-login-brand">
