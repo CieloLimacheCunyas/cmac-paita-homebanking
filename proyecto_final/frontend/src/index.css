@@ -206,3 +206,207 @@ button { font-family: inherit; cursor: pointer; }
   .hb-login-card { box-shadow:none; }
   .lp-hero h1 { font-size:1.75rem; }
 }
+
+/* ══════════════════════════════════════════════
+   ANIMACIONES GLOBALES — CMAC Paita
+══════════════════════════════════════════════ */
+
+/* Fade in desde abajo */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade in desde la izquierda */
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Fade in desde la derecha */
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Zoom in */
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Pulso suave */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.04); }
+}
+
+/* Flotacion suave */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* Brillo deslizante en botones */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Clases utilitarias */
+.anim-fadeup       { animation: fadeInUp   0.6s ease both; }
+.anim-fadeup-1     { animation: fadeInUp   0.6s ease 0.1s both; }
+.anim-fadeup-2     { animation: fadeInUp   0.6s ease 0.2s both; }
+.anim-fadeup-3     { animation: fadeInUp   0.6s ease 0.3s both; }
+.anim-fadeup-4     { animation: fadeInUp   0.6s ease 0.4s both; }
+.anim-fadeleft     { animation: fadeInLeft 0.6s ease both; }
+.anim-faderight    { animation: fadeInRight 0.6s ease both; }
+.anim-zoom         { animation: zoomIn     0.5s ease both; }
+.anim-float        { animation: float      3s ease-in-out infinite; }
+.anim-pulse        { animation: pulse      2s ease-in-out infinite; }
+
+/* Hover en cards — elevacion */
+.cp-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.cp-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,90,156,0.15) !important;
+}
+
+/* Hover en botones principales */
+.cp-btn {
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s !important;
+}
+.cp-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,90,156,0.3) !important;
+}
+.cp-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98) !important;
+}
+
+/* Hover en botones ghost */
+.cp-btn-ghost {
+  transition: all 0.2s ease !important;
+}
+.cp-btn-ghost:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,90,156,0.15) !important;
+}
+
+/* Hover en tabs del header */
+.cp-tab {
+  transition: all 0.2s ease !important;
+}
+
+/* Hover en acciones del aside */
+.cp-action {
+  transition: all 0.15s ease !important;
+}
+.cp-action:hover {
+  transform: translateX(4px);
+}
+
+/* Hover en productos de la landing */
+.lp-product {
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+}
+.lp-product:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 12px 32px rgba(0,90,156,0.15) !important;
+}
+
+/* Hover en botones quick de landing */
+.lp-quick {
+  transition: all 0.2s ease !important;
+}
+.lp-quick:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,90,156,0.2) !important;
+}
+
+/* Botón principal landing con shimmer */
+.lp-btn-main {
+  background: linear-gradient(90deg, var(--cp-naranja) 0%, #ff9f4a 50%, var(--cp-naranja) 100%);
+  background-size: 200% auto;
+  transition: all 0.3s ease !important;
+}
+.lp-btn-main:hover {
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(244,121,32,0.4) !important;
+}
+
+/* Hover en items de lista */
+.cp-prodlist li {
+  transition: all 0.15s ease !important;
+}
+.cp-prodlist li:hover {
+  background: var(--cp-azul-light) !important;
+  padding-left: 12px !important;
+}
+
+/* KPIs con animacion al cargar */
+.cp-kpi {
+  animation: fadeInUp 0.5s ease both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.cp-kpi:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,90,156,0.15) !important;
+}
+
+/* Input focus con animacion */
+.hb-input {
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s !important;
+}
+.hb-input:focus {
+  transform: scale(1.01);
+}
+
+/* Login card entrada */
+.hb-login-card {
+  animation: zoomIn 0.5s ease both !important;
+}
+
+/* Brand panel entrada */
+.hb-login-brand .brand-content {
+  animation: fadeInLeft 0.7s ease both !important;
+}
+
+/* Logo flotante */
+.hb-login-card img,
+.hb-login-brand img {
+  animation: float 4s ease-in-out infinite !important;
+}
+
+/* Demo botones */
+.demo-btn {
+  transition: all 0.15s ease !important;
+}
+.demo-btn:hover {
+  transform: scale(1.05) !important;
+}
+
+/* Header logo */
+.cp-logo {
+  transition: opacity 0.2s ease !important;
+}
+.cp-logo:hover {
+  opacity: 0.85;
+}
+
+/* Franja superior animada */
+.cp-franja-top {
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite !important;
+}
+
+/* Tabla de cuotas hover */
+tbody tr {
+  transition: background 0.15s ease !important;
+}
+tbody tr:hover {
+  background: var(--cp-azul-light) !important;
+}
